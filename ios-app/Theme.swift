@@ -196,7 +196,14 @@ struct StatusPill: View {
             .foregroundStyle(color)
             .padding(.horizontal, 12)
             .padding(.vertical, 7)
-        label.background(Capsule().fill(color.opacity(0.16)))
+        if glass {
+            label.background(
+                Capsule()
+                    .fill(.ultraThinMaterial)
+            )
+        } else {
+            label.background(Capsule().fill(color.opacity(0.16)))
+        }
     }
 }
 
