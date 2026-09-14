@@ -25,6 +25,11 @@ jobs:
       run: |
         rustup target add aarch64-apple-ios aarch64-apple-ios-sim
 
+    - name: Cache Rust
+      uses: Swatinem/rust-cache@v2
+      with:
+        workspaces: "rust-core -> target"
+
     - name: Build Rust FFI
       run: ./build-rust.sh
 
