@@ -1728,7 +1728,7 @@ final class Engine: ObservableObject {
     /// Bring up the device link for a standalone pairing operation, always with
     /// a fresh tunnel: `isConnected` still reads true after iOS tears one down.
     @MainActor
-    private func ensurePairingConnection() async throws {
+    func ensurePairingConnection() async throws {
         refreshNetworkStatus()
         // No Wi-Fi check: this all runs over the loopback tunnel.
         guard vpnConnected else {
