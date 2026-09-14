@@ -38,7 +38,7 @@ struct JITView: View {
                                         .frame(maxWidth: .infinity, alignment: .leading)
                                     }
                                     .frame(maxHeight: 200)
-                                    .onChange(of: controller.logs.count) { _ in
+                                    .onChange(of: controller.logs.count) {
                                         withAnimation {
                                             proxy.scrollTo(controller.logs.count - 1, anchor: .bottom)
                                         }

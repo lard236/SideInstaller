@@ -9,8 +9,8 @@ import Darwin
 final class DeviceConnection {
 
     // idevice opaque handles import as OpaquePointer.
-    private var adapter: OpaquePointer?
-    private var handshake: OpaquePointer?
+    var adapter: OpaquePointer?
+    var handshake: OpaquePointer?
 
     /// RemoteServiceDiscovery port reached over the VPN loopback.
     static let rsdPort: UInt16 = 49152
@@ -69,11 +69,11 @@ final class DeviceConnection {
     }
 
     /// Turn a returned IdeviceFfiError* into a thrown error (null == success).
-    private func check(_ err: UnsafeMutablePointer<IdeviceFfiError>?, _ fallback: String) throws {
+    func check(_ err: UnsafeMutablePointer<IdeviceFfiError>?, _ fallback: String) throws {
         if let error = ffiError(err, fallback) { throw error }
     }
 
-    private func fail(_ message: String) -> FFIError {
+    func fail(_ message: String) -> FFIError {
         FFIError(code: -1, subCode: 0, message: message)
     }
 

@@ -56,7 +56,7 @@ final class JITScriptRunner {
         guard let handle = command.withCString({ debugserver_command_new($0, nil, 0) }) else { return nil }
         defer { debugserver_command_free(handle) }
         var response: UnsafeMutablePointer<CChar>?
-        if let error = debug_proxy_send_command(debugProxy, handle, &response) {
+        if debug_proxy_send_command(debugProxy, handle, &response) != nil {
             recordExecutionError(.ffiError("debug_proxy_send_command failed"))
             return nil
         }

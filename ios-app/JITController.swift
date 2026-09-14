@@ -53,7 +53,12 @@ final class JITController: ObservableObject {
     }
     
     func enableJIT() async {
-        guard state == .idle || case .failed = state else { return }
+        let canStart: Bool
+        switch state {
+        case .idle, .failed: canStart = true
+        default: canStart = false
+        }
+        guard canStart else { return }
         state = .preparing
         logs.removeAll()
         

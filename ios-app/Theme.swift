@@ -196,13 +196,7 @@ struct StatusPill: View {
             .foregroundStyle(color)
             .padding(.horizontal, 12)
             .padding(.vertical, 7)
-        // Liquid Glass is iOS 26+; older releases get the tinted capsule, which
-        // is what every other pill on the screen already wears.
-        if glass, #available(iOS 26.0, *) {
-            label.glassEffect(.regular, in: Capsule())
-        } else {
-            label.background(Capsule().fill(color.opacity(0.16)))
-        }
+        label.background(Capsule().fill(color.opacity(0.16)))
     }
 }
 

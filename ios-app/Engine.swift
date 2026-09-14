@@ -2085,7 +2085,7 @@ final class Engine: ObservableObject {
     }
 
     /// Bridge a blocking deviceQueue body to async.
-    private func onDeviceQueue<T>(_ work: @escaping () throws -> T) async throws -> T {
+    func onDeviceQueue<T>(_ work: @escaping () throws -> T) async throws -> T {
         try await withCheckedThrowingContinuation { cont in
             deviceQueue.async {
                 do { cont.resume(returning: try work()) }

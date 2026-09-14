@@ -460,15 +460,7 @@ struct LocationView: View {
                 return
             }
             manager.lastError = nil
-            // `placemark` is deprecated as of iOS 26; `location` is its
-            // replacement for the coordinate, which is all this needs — and it
-            // only exists from 26, so older releases keep the deprecated one.
-            let coordinate: CLLocationCoordinate2D
-            if #available(iOS 26.0, *) {
-                coordinate = first.location.coordinate
-            } else {
-                coordinate = first.placemark.coordinate
-            }
+            let coordinate = first.placemark.coordinate
             withAnimation(.smooth(duration: 0.4)) {
                 camera = .region(MKCoordinateRegion(
                     center: coordinate,
