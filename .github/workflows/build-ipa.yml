@@ -21,7 +21,9 @@ jobs:
         rustup target add aarch64-apple-ios aarch64-apple-ios-sim
 
     - name: Build Rust FFI
-      run: ./build-rust.sh
+      run: |
+        export DEVELOPER_DIR=$(xcode-select -p)
+        ./build-rust.sh
 
     - name: Install XcodeGen
       run: brew install xcodegen
