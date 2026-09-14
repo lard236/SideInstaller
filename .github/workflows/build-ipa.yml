@@ -1,0 +1,57 @@
+name: Build SideInstaller
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build IPA
+    runs-on: macos-14
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install Rust targets
+      run: |
+        rustup target add aarch64-apple-ios aarch64-apple-ios-sim
+
+    - name: Build Rust FFI
+      run: ./build-rust.sh
+
+    - name: Install XcodeGen
+      run: brew install xcodegen
+
+    - name: Generate Xcode Project
+      run: xcodegen generate
+
+    - name: Build App (Unsigned)
+      run: |
+        xcodebuild clean build \
+          -project SideInstaller.xcodeproj \
+          -scheme SideInstaller \
+          -configuration Release \
+          -sdk iphoneos \
+          CODE_SIGN_IDENTITY="" \
+          CODE_SIGNING_REQUIRED=NO \
+          CODE_SIGNING_ALLOWED=NO \
+          CONFIGURATION_BUILD_DIR="$(pwd)/build"
+
+    - name: Package IPA
+      run: |
+        mkdir -p Payload
+        cp -r build/SideInstaller.app Payload/
+        # Ad-hoc sign the app so it can be sideloaded cleanly
+        ldid -S Payload/SideInstaller.app/SideInstaller || true
+        zip -qr SideInstaller.ipa Payload
+        rm -rf Payload
+
+    - name: Upload IPA Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: SideInstaller-IPA
+        path: SideInstaller.ipa

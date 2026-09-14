@@ -996,8 +996,9 @@ struct AppsView: View {
 /// living on, and the older profiles left behind by earlier signings.
 private struct AppProfileDetail: View {
     let status: SideloadedAppStatus
-
+    @EnvironmentObject private var engine: Engine
     @EnvironmentObject private var loc: Localizer
+    @State private var showJITSheet = false
 
     var body: some View {
         ScrollView {
@@ -1024,6 +1025,9 @@ private struct AppProfileDetail: View {
             .padding(20)
         }
         .background(AppBackground())
+        .sheet(isPresented: $showJITSheet) {
+            JITView(bundleID: status.app.bundleID, engine: engine)
+        }
         .navigationTitle(status.app.name)
         .navigationBarTitleDisplayMode(.inline)
     }
@@ -1040,6 +1044,15 @@ private struct AppProfileDetail: View {
                 if let version = status.app.version {
                     field(L("Version"), version)
                 }
+                
+                Button {
+                    showJITSheet = true
+                } label: {
+                    Label(L("Enable JIT"), systemImage: "bolt.fill")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(PrimaryButtonStyle())
+                .padding(.top, 4)
             }
         }
     }
